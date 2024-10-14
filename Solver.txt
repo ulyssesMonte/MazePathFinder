@@ -1,0 +1,79 @@
+package com.tpa.trab1;
+
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class Solver {
+
+    private static void printMaze(ArrayList<ArrayList<Integer>> maze) {
+        System.out.println("--------------------------------------------------------"); // Espaço vazio
+        for (ArrayList<Integer> row : maze) {
+            for (Integer cell : row) {
+                if (cell == 0) {
+                    System.out.print("X "); // Espaço vazio
+                } else if (cell == 1) {
+                    System.out.print("C "); // Caminho
+                } else {
+                    System.out.print("V "); // Visitado
+                }
+            }
+            System.out.println();
+        }
+        System.out.println(); // Linha em branco entre os passos
+    }
+
+    private static final int[][] DIRECTIONS = {
+        {1, 0},  // baixo
+        {0, 1},  // direita
+        {-1, 0}, // cima
+        {0, -1}  // esquerda
+    };
+
+    public static boolean findPath(ArrayList<ArrayList<Integer>> maze) {
+        int n = maze.size();
+        int m = maze.get(0).size();
+        System.out.println("n,m = " + n + m);
+
+        // Pilha para armazenar as coordenadas (linha, coluna)
+        Stack<int[]> stack = new Stack<>();
+        stack.push(new int[]{0, 0}); // Começa na posição (0, 0)
+
+        while (!stack.isEmpty()) {
+            int[] current = stack.pop();
+            int x = current[0];
+            int y = current[1];
+
+            // Verifica se chegamos ao final
+            if (x == n - 1 && y == m - 1) {
+                printMaze(maze); // Imprime a matriz final
+                return true; // Caminho encontrado
+            }
+
+            // Marca a posição como visitada
+            maze.get(x).set(y, 2); // 2 indica que já foi visitado
+            printMaze(maze); // Imprime a matriz após a visita
+
+            // Tenta mover em todas as direções
+            for (int[] direction : DIRECTIONS) {
+                int newX = x + direction[0];
+                int newY = y + direction[1];
+
+                // Verifica se a nova posição é válida
+                if (isValidMove(newX, newY, maze)) {
+                    stack.push(new int[]{newX, newY}); // Adiciona nova posição à pilha
+                }
+            }
+            printMaze(maze);
+        }
+
+        return false; // Caminho não encontrado
+    }
+
+    // Verifica se o movimento é válido
+    private static boolean isValidMove(int x, int y, ArrayList<ArrayList<Integer>> maze) {
+        return (x >= 0 && x < maze.size() && y >= 0 && y < maze.get(0).size() && (maze.get(x).get(y) == 1)); 
+    }
+
+    // Imprime a matriz
+    
+}
